@@ -11,7 +11,8 @@ huge strings around.
 
 This SHA1 class gives you the option to stream data into your hash object over
 multiple calls. This can speed things up significantly, especially for
-applications that hash data generated in a loop.
+applications that hash data generated in a loop. The class buffers and
+processes blocks of 64 bytes, discarding data that is no longer needed.
 
 This app is distributed under the MIT License and is free software.
 
