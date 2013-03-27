@@ -28,6 +28,7 @@ By default, this class behaves like any other SHA1 class:
 ```javascript
 
     var hash = new sha1().hash('data data data ');
+    // 65bd90d5e213e8d03e87b5be5eeda3bc81faa772
 ```
 
 Use the streaming mode option to hash data over multiple iterations:
@@ -39,6 +40,7 @@ Use the streaming mode option to hash data over multiple iterations:
         _sha1.hash('data ', {stream: true});
 
     var hash = _sha1.finalize();
+    // 65bd90d5e213e8d03e87b5be5eeda3bc81faa772
 ```
 
 Once you're done streaming data in, you call _sha1.finalize()_ to hash any
