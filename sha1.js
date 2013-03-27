@@ -63,10 +63,13 @@ var sha1 = new Class({
 		options || (options = {});
 		options.stream || (options.stream = false);
 
-		if (typeof data == 'string')
-			data = convert.to_bytes(data);
+		var _to_bytes = convert.to_bytes;
 
-		var _buffer = this.buffer.concat(data);
+		if (typeof data == 'string')
+			data = _to_bytes(data);
+
+		var _buffer 			= this.buffer.concat(data);
+		var _processed_length 	= this.processed_length;
 
 		for (var i=0; (i+64) <= _buffer.length; i += 64)
 		{
@@ -101,10 +104,11 @@ var sha1 = new Class({
 				h[4] + e
 			];
 
-			this.processed_length += 512;
+			_processed_length += 512;
 		}
 
-		this.buffer = _buffer.slice(i);
+		this.buffer 			= _buffer.slice(i);
+		this.processed_length	= _processed_length;
 		
 		if (options.stream == false)
 			return this.finalize(options);
@@ -178,7 +182,7 @@ var convert = {
 		var bytes = [];
 
 		for (var i = 0; i < str.length; i++)
-			bytes.push(str.charCodeAt(i));
+			bytes.push(str.charCodeAt(i) & 255);
 		
 		return bytes;
 	},
@@ -192,14 +196,15 @@ var convert = {
 	 */
 	to_words: function(data)
 	{
-		var words = [];
+		var words		= [];
+		var _to_word 	= this.to_word;
 
 		if (typeof data != 'string')
 			for (var i=0; i<data.length; i+=4)
-				words.push(this.to_word(data[i], data[i+1], data[i+2], data[i+3]));
+				words.push(_to_word(data[i], data[i+1], data[i+2], data[i+3]));
 		else
 			for (var i=0; i<data.length; i+=4)
-				words.push(this.to_word(data.charCodeAt(i), data.charCodeAt(i+1), data.charCodeAt(i+2), data.charCodeAt(i+3)));
+				words.push(_to_word(data.charCodeAt(i), data.charCodeAt(i+1), data.charCodeAt(i+2), data.charCodeAt(i+3)));
 
 		return words;
 	},
@@ -238,10 +243,11 @@ var convert = {
 	 */
 	words_to_binstring: function(words)
 	{
-		var binary = '';
+		var binary 				= '';
+		var _word_to_binstring	= this.word_to_binstring;
 
 		for (var i = 0; i < words.length; i++)
-			binary += this.word_to_binstring(words[i]);
+			binary += _word_to_binstring(words[i]);
 
 		return binary;
 	},
